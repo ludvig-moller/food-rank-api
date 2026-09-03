@@ -1,0 +1,33 @@
+{
+  "name": "food-rank-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ludvig-moller/food-rank-api#readme",
+  "bugs": {
+    "url": "https://github.com/ludvig-moller/food-rank-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludvig-moller/food-rank-api.git"
+  },
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "npx nodemon --env-file=.env --exec tsx src/server.ts",
+    "test": "node --env-file=.env ./node_modules/vitest/vitest.mjs"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/supertest": "^7.2.1",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "tsx": "^4.23.13",
+    "vitest": "^5.0.0"
+  }
+}
