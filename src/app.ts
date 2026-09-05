@@ -1,5 +1,10 @@
 import express, { type Express } from "express";
+import Database from "better-sqlite3";
 
-const app: Express = express();
+function createApp(db: Database.Database) {
+    const app: Express = express();
 
-export default app;
+    return app;
+}
+
+export default createApp;

@@ -1,3 +1,8 @@
-import app from "./app.ts";
+import createDb from "./conifg/db";
+import createApp from "./app";
+import { env } from "./conifg/env";
 
-app.listen(3000);
+const db = createDb(env.databasePath);
+const app = createApp(db);
+
+app.listen(env.port);
