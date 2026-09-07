@@ -1,6 +1,6 @@
-import createDb from "./conifg/db";
+import createDb from "./config/db";
 import createApp from "./app";
-import { env } from "./conifg/env";
+import { env } from "./config/env";
 
 const db = createDb(env.databasePath);
 const app = createApp(db);
