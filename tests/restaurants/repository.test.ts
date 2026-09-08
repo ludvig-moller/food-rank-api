@@ -1,0 +1,191 @@
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { type Database } from "better-sqlite3";
+import createDb from "../../src/config/db";
+import { RestaurantRepository } from "../../src/repositories/RestaurantRepository";
+import { RestaurantQuery } from "../../src/types/RestaurantQuery";
+
+const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
+
+let testDb: Database;
+
+beforeEach(() => {
+    testDb = createDb(":memory:");
+});
+
+afterEach(() => {
+    testDb.close();
+});
+
+describe("get", () => {
+    it("returns restaurants with default query", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "created_at",
+            order: "desc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(2);
+    });
+
+    it("returns an empty array", () => {
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "created_at",
+            order: "desc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(0);
+    });
+
+    it("respects the limit", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 1,
+            sort: "created_at",
+            order: "desc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(1);
+    });
+
+    it("respects pagination", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 2,
+            limit: 1,
+            sort: "created_at",
+            order: "desc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(1);
+    });
+
+    it("sorts ascending", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "restaurant_name",
+            order: "asc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(2);
+        expect(restaurants[0].restaurant_name).toBe("Burger place");
+        expect(restaurants[1].restaurant_name).toBe("Pizza place");
+    });
+
+    it("sorts descending", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "restaurant_name",
+            order: "desc",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(2);
+        expect(restaurants[0].restaurant_name).toBe("Pizza place");
+        expect(restaurants[1].restaurant_name).toBe("Burger place");
+    });
+
+    it("filters by country", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Germany", "Berlin");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "created_at",
+            order: "desc",
+            country: "Sweden",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0].restaurant_name).toBe("Pizza place");
+    });
+
+    it("filters by city", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Örebro");
+        testDb.prepare(insertRestaurant).run("2", "Burger place", "The best burger.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 1,
+            limit: 20,
+            sort: "created_at",
+            order: "desc",
+            city: "Örebro",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0].restaurant_name).toBe("Pizza place");
+    });
+
+    it("combines pagination, sorting and filtering", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Örebro");
+        testDb.prepare(insertRestaurant).run("2", "Pasta place", "The best pasta.", "Sweden", "Örebro");
+        testDb.prepare(insertRestaurant).run("3", "Burger place", "The best burger.", "Sweden", "Stockholm");
+        testDb.prepare(insertRestaurant).run("4", "Kebab place", "The best kebab.", "Germany", "Berlin");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const query: RestaurantQuery = {
+            page: 2,
+            limit: 1,
+            sort: "restaurant_name",
+            order: "asc",
+            country: "Sweden",
+            city: "Örebro",
+        };
+
+        const restaurants = repository.get(query);
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0].restaurant_name).toBe("Pasta place");
+    });
+});
