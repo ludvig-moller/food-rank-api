@@ -5,6 +5,7 @@ export const createRestaurantRoutes = (restaurantController: RestaurantControlle
     const router = Router();
 
     router.get("/", restaurantController.get);
+    router.get("/:id", restaurantController.getById);
 
     return router;
 }
