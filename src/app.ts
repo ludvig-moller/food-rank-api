@@ -4,6 +4,7 @@ import { createRestaurantRoutes } from "./routes/RestaurantRoutes";
 import { RestaurantRepository } from "./repositories/RestaurantRepository";
 import { RestaurantService } from "./services/RestaurantService";
 import { RestaurantController } from "./controllers/RestaurantController";
+import { errorHandler } from "./middleware/errorHandler";
 
 function createApp(db: Database.Database) {
     const app: Express = express();
@@ -12,6 +13,8 @@ function createApp(db: Database.Database) {
     const restaurantService = new RestaurantService(restaurantRepository);
     const restaurantController = new RestaurantController(restaurantService);
     app.use("/api/restaurants", createRestaurantRoutes(restaurantController));
+
+    app.use(errorHandler);
 
     return app;
 }
