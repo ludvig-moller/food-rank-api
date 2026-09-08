@@ -186,7 +186,7 @@ describe("get", () => {
         const restaurants = repository.get(query);
 
         expect(restaurants).toHaveLength(1);
-        expect(restaurants[0].restaurant_name).toBe("Pasta place");
+        expect(restaurants[0].restaurant_name).toBe("Pizza place");
     });
 });
 
