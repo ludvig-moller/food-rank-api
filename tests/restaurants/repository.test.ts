@@ -189,3 +189,29 @@ describe("get", () => {
         expect(restaurants[0].restaurant_name).toBe("Pasta place");
     });
 });
+
+describe("getById", () => {
+    it("returns the resturant when it exsits", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const restaurant = repository.getById("1");
+
+        expect(restaurant).toMatchObject({
+            id: "1",
+            restaurant_name: "Pizza place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Stockholm",
+        });
+    });
+
+    it("returns undefined when it dosent exists", () => {
+        const repository = new RestaurantRepository(testDb);
+
+        const restaurant = repository.getById("1");
+
+        expect(restaurant).toBeUndefined();
+    });
+});

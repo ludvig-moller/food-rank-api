@@ -57,3 +57,28 @@ describe("GET /api/restaurants", () => {
         expect(response.status).toBe(400);
     });
 });
+
+describe("GET /api/restaurant/:id", () => {
+    it("returns 200 with the restaurant", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .get("/api/restaurants/1");
+
+        expect(res.status).toBe(200);
+        expect(res.body).toMatchObject({
+            id: "1",
+            restaurant_name: "Pizza place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Stockholm",
+        });
+    })
+
+    it("returns 404 when restaurant dose not exist", async () => {
+        const res = await request(app)
+            .get("/api/restaurants/1");
+        
+        expect(res.status).toBe(404);
+    })
+});

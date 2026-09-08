@@ -14,4 +14,8 @@ export class RestaurantRepository {
     get(query: RestaurantQuery): Restaurant[] {
         throw new NotImplementedError("This is not implemented.");
     }
+
+    getById(id: string): Restaurant | undefined {
+        throw new NotImplementedError("This is not implemented.");
+    }
 }
