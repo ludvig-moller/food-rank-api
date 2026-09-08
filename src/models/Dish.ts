@@ -1,5 +1,5 @@
 
-interface Dish {
+export interface Dish {
     id: string;
     restaurant_id: string;
     dish_name: string;
@@ -7,5 +7,3 @@ interface Dish {
     price: string;
     created_at: string;
 }
-
-export default Dish;

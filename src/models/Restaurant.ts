@@ -1,5 +1,5 @@
 
-interface Restaurant {
+export interface Restaurant {
     id: string;
     restaurant_name: string;
     description: string | null;
@@ -7,5 +7,3 @@ interface Restaurant {
     city: string;
     created_at: string;
 }
-
-export default Restaurant;
