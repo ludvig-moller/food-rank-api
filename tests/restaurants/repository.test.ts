@@ -3,7 +3,9 @@ import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { RestaurantRepository } from "../../src/repositories/RestaurantRepository";
 import { RestaurantQuery } from "../../src/types/RestaurantQuery";
+import { Restaurant } from "../../src/models/Restaurant";
 
+const selectRestaurants = "SELECT * FROM restaurants";
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
 
 let testDb: Database;
@@ -213,5 +215,28 @@ describe("getById", () => {
         const restaurant = repository.getById("1");
 
         expect(restaurant).toBeUndefined();
+    });
+});
+
+describe("create", () => {
+    it("inserts a restaurant with correct fields", () => {
+        const repository = new RestaurantRepository(testDb);
+
+        repository.create(
+            "Pizza place",
+            "The best pizza.",
+            "Sweden",
+            "Stockholm",
+        );
+
+        const restaurants = testDb.prepare(selectRestaurants).all() as Restaurant[];
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0]).toMatchObject({
+            restaurant_name: "Pizza place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Stockholm",
+        });
     });
 });
