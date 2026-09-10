@@ -4,6 +4,7 @@ import { parseDto } from "../utils/parseDto";
 import { restaurantQuerySchema } from "../schemas/restaurantQuerySchema";
 import { BadRequestError } from "../errors/BadRequestError";
 import { restaurantCreateSchema } from "../schemas/restaurantCreateSchema";
+import { restaurantUpdateSchema } from "../schemas/restaurantUpdateSchema";
 
 export class RestaurantController {
     private readonly restaurantService: RestaurantService;
@@ -40,6 +41,12 @@ export class RestaurantController {
     }
 
     create = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = parseDto(restaurantUpdateSchema, req.body);
+        } catch(err) {
+            next(err);
+        }
+
         try {
             const data = parseDto(restaurantCreateSchema, req.body);
 

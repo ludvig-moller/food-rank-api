@@ -10,7 +10,7 @@ export function parseDto<T>(
     if (!result.success) {
         throw new BadRequestError(
             result.error.issues
-                .map(issue => `${issue.path.join(".")}: ${issue.message}`)
+                .map(issue => `${issue.path.length !== 0 ? issue.path.join(".") + ": " : ""}${issue.message}`)
                 .join(", ")
         );
     }

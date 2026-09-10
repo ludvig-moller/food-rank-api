@@ -147,3 +147,73 @@ describe("POST /api/restaurants", () => {
         expect(res.status).toBe(400);
     });
 });
+
+describe("PATCH /api/restaurants/:id", () => {
+    it("returns 200", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .patch("/api/restaurants/1")
+            .send({
+                city: "Örebro",
+            });
+        
+        expect(res.status).toBe(200);
+    });
+
+    it("returns updated restaurant", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .patch("/api/restaurants/1")
+            .send({
+                city: "Örebro",
+            });
+        
+        expect(res.body).toMatchObject({
+            restaurant_name: "Pizza Place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Örebro",
+        });
+    });
+
+    it("updates the restaurant in the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .patch("/api/restaurants/1")
+            .send({
+                city: "Örebro",
+            });
+        
+        const restaurants = testDb.prepare(selectRestaurants).all();
+        
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0]).toMatchObject({
+            restaurant_name: "Pizza Place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Örebro",
+        });
+    });
+
+    it("returns 400 when no fields are provided", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .patch("/api/restaurants/1");
+
+        expect(res.status).toBe(400);
+    })
+
+    it("returns 404 when restaurant dose not exist", async () => {
+        const res = await request(app)
+            .patch("/api/restaurants/1")
+            .send({
+                city: "Örebro",
+            });
+
+        expect(res.status).toBe(404);
+    })
+});

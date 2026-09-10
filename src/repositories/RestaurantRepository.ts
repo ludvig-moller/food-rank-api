@@ -3,6 +3,8 @@ import { type Database } from "better-sqlite3";
 import { Restaurant } from "../models/Restaurant";
 import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
 import { RestaurantCreateDto } from "../schemas/restaurantCreateSchema";
+import { RestaurantUpdateDto } from "../schemas/restaurantUpdateSchema";
+import { NotImplementedError } from "../errors/NotImplementedError";
 
 export class RestaurantRepository {
     private readonly db: Database;
@@ -68,5 +70,9 @@ export class RestaurantRepository {
                 data.country, 
                 data.city,
             ) as Restaurant;
+    }
+
+    update(data: RestaurantUpdateDto): Restaurant {
+        throw new NotImplementedError("This has not been implemented");
     }
 }

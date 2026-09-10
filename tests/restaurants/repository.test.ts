@@ -5,6 +5,7 @@ import { RestaurantRepository } from "../../src/repositories/RestaurantRepositor
 import { RestaurantQueryDto } from "../../src/schemas/restaurantQuerySchema";
 import { RestaurantCreateDto } from "../../src/schemas/restaurantCreateSchema";
 import { Restaurant } from "../../src/models/Restaurant";
+import { RestaurantUpdateDto, restaurantUpdateSchema } from "../../src/schemas/restaurantUpdateSchema";
 
 const selectRestaurants = "SELECT * FROM restaurants";
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
@@ -223,7 +224,7 @@ describe("create", () => {
     it("inserts a restaurant with correct fields", () => {
         const repository = new RestaurantRepository(testDb);
 
-        const data: RestaurantCreateDto =  {
+        const data: RestaurantCreateDto = {
             restaurant_name: "Pizza place",
             description: "The best pizza.",
             country: "Sweden",
@@ -239,6 +240,53 @@ describe("create", () => {
             description: "The best pizza.",
             country: "Sweden",
             city: "Stockholm",
+        });
+    });
+});
+
+describe("update", () => {
+    it("updates the restaurant correctly", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const data: RestaurantUpdateDto = {
+            restaurant_name: "Pizza palace", 
+            description: null,
+            country: "Norway",
+            city: "Oslo",
+        }
+        repository.update(data);
+
+        const restaurants = testDb.prepare(selectRestaurants).all();
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0]).toMatchObject({
+            restaurant_name: "Pizza palace", 
+            description: null,
+            country: "Norway",
+            city: "Oslo",
+        });
+    });
+
+    it("updates one field correctly", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const data: RestaurantUpdateDto = {
+            city: "Örebro",
+        }
+        repository.update(data);
+
+        const restaurants = testDb.prepare(selectRestaurants).all();
+
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0]).toMatchObject({
+            restaurant_name: "Pizza place", 
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Örebro",
         });
     });
 });
