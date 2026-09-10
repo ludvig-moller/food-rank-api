@@ -94,6 +94,10 @@ export class RestaurantRepository {
     }
 
     delete(id: string): boolean {
-        throw new NotImplementedError("This has not been implemented");
+        const result = this.db
+            .prepare("DELETE FROM restaurants WHERE id = ?")
+            .run(id);
+
+        return result.changes > 0;
     }
 }

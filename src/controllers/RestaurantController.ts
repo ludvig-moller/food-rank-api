@@ -68,4 +68,19 @@ export class RestaurantController {
             next(err);
         }
     }
+
+    delete = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+
+            if (typeof id !== "string")
+                throw new BadRequestError("Invalid restaurant ID");
+            
+            this.restaurantService.delete(id);
+
+            return res.status(204).send();
+        } catch(err) {
+            next(err);
+        }
+    }
 }

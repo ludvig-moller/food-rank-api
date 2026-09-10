@@ -8,6 +8,7 @@ export const createRestaurantRoutes = (restaurantController: RestaurantControlle
     router.get("/:id", restaurantController.getById);
     router.post("/", restaurantController.create);
     router.patch("/:id", restaurantController.update);
+    router.delete("/:id", restaurantController.delete);
 
     return router;
 }

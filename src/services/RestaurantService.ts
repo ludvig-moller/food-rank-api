@@ -37,4 +37,11 @@ export class RestaurantService {
 
         return restaurant;
     }
+
+    delete(id: string): void {
+        const deleted = this.restaurantRepository.delete(id);
+
+        if (!deleted)
+            throw new NotFoundError("Restaurant not found");
+    }
 }
