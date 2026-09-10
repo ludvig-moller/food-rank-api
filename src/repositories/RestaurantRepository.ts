@@ -92,4 +92,8 @@ export class RestaurantRepository {
             .prepare(sql)
             .get(...updateValues, id) as Restaurant | undefined;
     }
+
+    delete(id: string): boolean {
+        throw new NotImplementedError("This has not been implemented");
+    }
 }

@@ -290,3 +290,26 @@ describe("update", () => {
         });
     });
 });
+
+describe("delete", () => {
+    it("deletes the restaurant and returns true", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const repository = new RestaurantRepository(testDb);
+
+        const result = repository.delete("1");
+
+        const restaurants = testDb.prepare(selectRestaurants).all();
+
+        expect(restaurants).toHaveLength(0);
+        expect(result).toBe(true);
+    });
+
+    it("returns false when the id dose not exist", () => {
+        const repository = new RestaurantRepository(testDb);
+
+        const result = repository.delete("1");
+
+        expect(result).toBe(false);
+    });
+});

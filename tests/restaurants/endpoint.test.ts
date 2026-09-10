@@ -76,7 +76,7 @@ describe("GET /api/restaurants/:id", () => {
         });
     });
 
-    it("returns 404 when restaurant dose not exist", async () => {
+    it("returns 404 when restaurant does not exist", async () => {
         const res = await request(app)
             .get("/api/restaurants/1");
         
@@ -181,7 +181,7 @@ describe("PATCH /api/restaurants/:id", () => {
     it("updates the restaurant in the database", async () => {
         testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
 
-        const res = await request(app)
+        await request(app)
             .patch("/api/restaurants/1")
             .send({
                 city: "Örebro",
@@ -207,7 +207,7 @@ describe("PATCH /api/restaurants/:id", () => {
         expect(res.status).toBe(400);
     })
 
-    it("returns 404 when restaurant dose not exist", async () => {
+    it("returns 404 when restaurant does not exist", async () => {
         const res = await request(app)
             .patch("/api/restaurants/1")
             .send({
@@ -216,4 +216,33 @@ describe("PATCH /api/restaurants/:id", () => {
 
         expect(res.status).toBe(404);
     })
+});
+
+describe("DELETE /api/restaurants/:id", () => {
+    it("returns 204", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .delete("/api/restaurants/1");
+        
+        expect(res.status).toBe(204);
+    });
+
+    it("deletes the restaurant from the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        await request(app)
+            .delete("/api/restaurants/1");
+        
+        const restaurants = testDb.prepare(selectRestaurants).all();
+
+        expect(restaurants).toHaveLength(0);
+    });
+
+    it("returns 404 when restaurant does not exist", async () => {
+        const res = await request(app)
+            .delete("/api/restaurants/1");
+
+        expect(res.status).toBe(404);
+    });
 });
