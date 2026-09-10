@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { RestaurantRepository } from "../../src/repositories/RestaurantRepository";
-import { RestaurantQuery } from "../../src/types/RestaurantQuery";
+import { RestaurantQueryDto } from "../../src/schemas/restaurantQuerySchema";
 import { Restaurant } from "../../src/models/Restaurant";
 
 const selectRestaurants = "SELECT * FROM restaurants";
@@ -25,7 +25,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "created_at",
@@ -40,7 +40,7 @@ describe("get", () => {
     it("returns an empty array", () => {
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "created_at",
@@ -58,7 +58,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 1,
             sort: "created_at",
@@ -76,7 +76,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 2,
             limit: 1,
             sort: "created_at",
@@ -94,7 +94,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "restaurant_name",
@@ -114,7 +114,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "restaurant_name",
@@ -134,7 +134,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "created_at",
@@ -154,7 +154,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 1,
             limit: 20,
             sort: "created_at",
@@ -176,7 +176,7 @@ describe("get", () => {
 
         const repository = new RestaurantRepository(testDb);
 
-        const query: RestaurantQuery = {
+        const query: RestaurantQueryDto = {
             page: 2,
             limit: 1,
             sort: "restaurant_name",

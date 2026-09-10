@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { RestaurantService } from "../services/RestaurantService";
-import { parseRestaurantQuery } from "../utils/parseRestaurantQuery";
+import { parseDto } from "../utils/parseDto";
+import { restaurantQuerySchema } from "../schemas/restaurantQuerySchema";
 import { BadRequestError } from "../errors/BadRequestError";
 
 export class RestaurantController {
@@ -12,7 +13,7 @@ export class RestaurantController {
 
     get = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const query = parseRestaurantQuery(req);
+            const query = parseDto(restaurantQuerySchema, req.query);
 
             const restaurants = this.restaurantService.get(query);
 

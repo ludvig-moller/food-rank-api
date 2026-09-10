@@ -1,7 +1,7 @@
 import { type Database } from "better-sqlite3";
 
 import { Restaurant } from "../models/Restaurant";
-import { RestaurantQuery } from "../types/RestaurantQuery";
+import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
 import { NotImplementedError } from "../errors/NotImplementedError";
 
 export class RestaurantRepository {
@@ -11,7 +11,7 @@ export class RestaurantRepository {
         this.db = db;
     }
 
-    get(query: RestaurantQuery): Restaurant[] {
+    get(query: RestaurantQueryDto): Restaurant[] {
         const params: (string | number)[] = [];
 
         const whereConditions: string[] = [];

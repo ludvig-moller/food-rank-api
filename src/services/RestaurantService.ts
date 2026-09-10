@@ -1,7 +1,7 @@
 import { NotFoundError } from "../errors/NotFoundError";
 import { Restaurant } from "../models/Restaurant";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
-import { RestaurantQuery } from "../types/RestaurantQuery";
+import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
 
 export class RestaurantService {
     private readonly restaurantRepository: RestaurantRepository;
@@ -10,7 +10,7 @@ export class RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    get(query: RestaurantQuery): Restaurant[] {
+    get(query: RestaurantQueryDto): Restaurant[] {
         return this.restaurantRepository.get(query);
     }
 
