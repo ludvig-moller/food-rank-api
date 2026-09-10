@@ -9,6 +9,8 @@ import { errorHandler } from "./middleware/errorHandler";
 function createApp(db: Database.Database) {
     const app: Express = express();
 
+    app.use(express.json());
+
     const restaurantRepository = new RestaurantRepository(db);
     const restaurantService = new RestaurantService(restaurantRepository);
     const restaurantController = new RestaurantController(restaurantService);

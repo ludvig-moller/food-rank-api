@@ -1,6 +1,7 @@
 import { NotFoundError } from "../errors/NotFoundError";
 import { Restaurant } from "../models/Restaurant";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
+import { RestaurantCreateDto } from "../schemas/restaurantCreateSchema";
 import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
 
 export class RestaurantService {
@@ -21,5 +22,9 @@ export class RestaurantService {
             throw new NotFoundError("Restaurant not found");
 
         return restaurant;
+    }
+
+    create(data: RestaurantCreateDto) {
+        return this.restaurantRepository.create(data);
     }
 }

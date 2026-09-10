@@ -3,6 +3,7 @@ import { RestaurantService } from "../services/RestaurantService";
 import { parseDto } from "../utils/parseDto";
 import { restaurantQuerySchema } from "../schemas/restaurantQuerySchema";
 import { BadRequestError } from "../errors/BadRequestError";
+import { restaurantCreateSchema } from "../schemas/restaurantCreateSchema";
 
 export class RestaurantController {
     private readonly restaurantService: RestaurantService;
@@ -33,6 +34,18 @@ export class RestaurantController {
             const restaurant = this.restaurantService.getById(id);
 
             return res.status(200).json(restaurant);
+        } catch(err) {
+            next(err);
+        }
+    }
+
+    create = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = parseDto(restaurantCreateSchema, req.body);
+
+            const restaurant = this.restaurantService.create(data);
+
+            return res.status(201).json(restaurant);
         } catch(err) {
             next(err);
         }

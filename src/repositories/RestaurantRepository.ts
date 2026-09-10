@@ -2,7 +2,7 @@ import { type Database } from "better-sqlite3";
 
 import { Restaurant } from "../models/Restaurant";
 import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
-import { NotImplementedError } from "../errors/NotImplementedError";
+import { RestaurantCreateDto } from "../schemas/restaurantCreateSchema";
 
 export class RestaurantRepository {
     private readonly db: Database;
@@ -53,12 +53,20 @@ export class RestaurantRepository {
             .get(id) as Restaurant | undefined;
     }
 
-    create(
-        restaurant_name: string,
-        description: string | null,
-        country: string,
-        city: string,
-    ): Restaurant {
-        throw new NotImplementedError("This is not implemented");
+    create(data: RestaurantCreateDto): Restaurant {
+        return this.db
+            .prepare(`
+                INSERT INTO 
+                restaurants (id, restaurant_name, description, country, city)
+                VALUES (?, ?, ?, ?, ?)
+                RETURNING *
+            `)
+            .get(
+                crypto.randomUUID(), 
+                data.restaurant_name, 
+                data.description, 
+                data.country, 
+                data.city,
+            ) as Restaurant;
     }
 }

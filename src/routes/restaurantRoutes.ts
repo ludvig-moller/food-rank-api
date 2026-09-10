@@ -6,6 +6,7 @@ export const createRestaurantRoutes = (restaurantController: RestaurantControlle
 
     router.get("/", restaurantController.get);
     router.get("/:id", restaurantController.getById);
+    router.post("/", restaurantController.create);
 
     return router;
 }

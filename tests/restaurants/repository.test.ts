@@ -3,6 +3,7 @@ import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { RestaurantRepository } from "../../src/repositories/RestaurantRepository";
 import { RestaurantQueryDto } from "../../src/schemas/restaurantQuerySchema";
+import { RestaurantCreateDto } from "../../src/schemas/restaurantCreateSchema";
 import { Restaurant } from "../../src/models/Restaurant";
 
 const selectRestaurants = "SELECT * FROM restaurants";
@@ -222,12 +223,13 @@ describe("create", () => {
     it("inserts a restaurant with correct fields", () => {
         const repository = new RestaurantRepository(testDb);
 
-        repository.create(
-            "Pizza place",
-            "The best pizza.",
-            "Sweden",
-            "Stockholm",
-        );
+        const data: RestaurantCreateDto =  {
+            restaurant_name: "Pizza place",
+            description: "The best pizza.",
+            country: "Sweden",
+            city: "Stockholm",
+        };
+        repository.create(data);
 
         const restaurants = testDb.prepare(selectRestaurants).all() as Restaurant[];
 
