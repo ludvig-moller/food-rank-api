@@ -5,7 +5,7 @@ import { RestaurantRepository } from "../../src/repositories/RestaurantRepositor
 import { RestaurantQueryDto } from "../../src/schemas/restaurantQuerySchema";
 import { RestaurantCreateDto } from "../../src/schemas/restaurantCreateSchema";
 import { Restaurant } from "../../src/models/Restaurant";
-import { RestaurantUpdateDto, restaurantUpdateSchema } from "../../src/schemas/restaurantUpdateSchema";
+import { RestaurantUpdateDto } from "../../src/schemas/restaurantUpdateSchema";
 
 const selectRestaurants = "SELECT * FROM restaurants";
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
@@ -256,7 +256,7 @@ describe("update", () => {
             country: "Norway",
             city: "Oslo",
         }
-        repository.update(data);
+        repository.update("1", data);
 
         const restaurants = testDb.prepare(selectRestaurants).all();
 
@@ -277,7 +277,7 @@ describe("update", () => {
         const data: RestaurantUpdateDto = {
             city: "Örebro",
         }
-        repository.update(data);
+        repository.update("1", data);
 
         const restaurants = testDb.prepare(selectRestaurants).all();
 

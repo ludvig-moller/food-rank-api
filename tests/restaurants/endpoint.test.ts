@@ -171,7 +171,7 @@ describe("PATCH /api/restaurants/:id", () => {
             });
         
         expect(res.body).toMatchObject({
-            restaurant_name: "Pizza Place",
+            restaurant_name: "Pizza place",
             description: "The best pizza.",
             country: "Sweden",
             city: "Örebro",
@@ -191,7 +191,7 @@ describe("PATCH /api/restaurants/:id", () => {
         
         expect(restaurants).toHaveLength(1);
         expect(restaurants[0]).toMatchObject({
-            restaurant_name: "Pizza Place",
+            restaurant_name: "Pizza place",
             description: "The best pizza.",
             country: "Sweden",
             city: "Örebro",

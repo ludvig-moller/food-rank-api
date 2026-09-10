@@ -72,7 +72,24 @@ export class RestaurantRepository {
             ) as Restaurant;
     }
 
-    update(data: RestaurantUpdateDto): Restaurant {
-        throw new NotImplementedError("This has not been implemented");
+    update(id: string, data: RestaurantUpdateDto): Restaurant | undefined {
+        const updateFields: string[] = [];
+        const updateValues: (string | null)[] = [];
+
+        Object.entries(data).forEach((entry) => {
+            updateFields.push(entry[0]);
+            updateValues.push(entry[1]);
+        });
+
+        const sql = `
+            UPDATE restaurants 
+            SET ${updateFields.map((field) => `${field} = ?`).join(", ")}
+            WHERE id = ?
+            RETURNING *
+        `;
+
+        return this.db
+            .prepare(sql)
+            .get(...updateValues, id) as Restaurant | undefined;
     }
 }

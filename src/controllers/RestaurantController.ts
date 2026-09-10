@@ -42,17 +42,28 @@ export class RestaurantController {
 
     create = (req: Request, res: Response, next: NextFunction) => {
         try {
-            const data = parseDto(restaurantUpdateSchema, req.body);
-        } catch(err) {
-            next(err);
-        }
-
-        try {
             const data = parseDto(restaurantCreateSchema, req.body);
 
             const restaurant = this.restaurantService.create(data);
 
             return res.status(201).json(restaurant);
+        } catch(err) {
+            next(err);
+        }
+    }
+
+    update = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+
+            if (typeof id !== "string")
+                throw new BadRequestError("Invalid restaurant ID");
+
+            const data = parseDto(restaurantUpdateSchema, req.body);
+
+            const restaurant = this.restaurantService.update(id, data);
+
+            return res.status(200).json(restaurant);
         } catch(err) {
             next(err);
         }

@@ -3,6 +3,7 @@ import { Restaurant } from "../models/Restaurant";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
 import { RestaurantCreateDto } from "../schemas/restaurantCreateSchema";
 import { RestaurantQueryDto } from "../schemas/restaurantQuerySchema";
+import { RestaurantUpdateDto } from "../schemas/restaurantUpdateSchema";
 
 export class RestaurantService {
     private readonly restaurantRepository: RestaurantRepository;
@@ -26,5 +27,14 @@ export class RestaurantService {
 
     create(data: RestaurantCreateDto) {
         return this.restaurantRepository.create(data);
+    }
+
+    update(id: string, data: RestaurantUpdateDto) {
+        const restaurant = this.restaurantRepository.update(id, data);
+
+        if (!restaurant)
+            throw new NotFoundError("Restaurant not found");
+
+        return restaurant;
     }
 }
