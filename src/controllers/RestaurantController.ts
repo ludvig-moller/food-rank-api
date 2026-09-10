@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { RestaurantService } from "../services/RestaurantService";
 import { parseDto } from "../utils/parseDto";
-import { restaurantQuerySchema } from "../schemas/restaurantQuerySchema";
+import { restaurantQuerySchema } from "../schemas/restaurants/restaurantQuerySchema";
+import { restaurantCreateSchema } from "../schemas/restaurants/restaurantCreateSchema";
+import { restaurantUpdateSchema } from "../schemas/restaurants/restaurantUpdateSchema";
 import { BadRequestError } from "../errors/BadRequestError";
-import { restaurantCreateSchema } from "../schemas/restaurantCreateSchema";
-import { restaurantUpdateSchema } from "../schemas/restaurantUpdateSchema";
 
 export class RestaurantController {
     private readonly restaurantService: RestaurantService;

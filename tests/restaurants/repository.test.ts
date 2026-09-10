@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { RestaurantRepository } from "../../src/repositories/RestaurantRepository";
-import { RestaurantQueryDto } from "../../src/schemas/restaurantQuerySchema";
-import { RestaurantCreateDto } from "../../src/schemas/restaurantCreateSchema";
+import { RestaurantQueryDto } from "../../src/schemas/restaurants/restaurantQuerySchema";
+import { RestaurantCreateDto } from "../../src/schemas/restaurants/restaurantCreateSchema";
 import { Restaurant } from "../../src/models/Restaurant";
-import { RestaurantUpdateDto } from "../../src/schemas/restaurantUpdateSchema";
+import { RestaurantUpdateDto } from "../../src/schemas/restaurants/restaurantUpdateSchema";
 
 const selectRestaurants = "SELECT * FROM restaurants";
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
