@@ -178,7 +178,7 @@ describe("DELETE /api/dishes/:id", () => {
         testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
 
         const res = await request(app)
-            .delete("/api/restaurants/1");
+            .delete("/api/dishes/1");
         
         expect(res.status).toBe(204);
     });

@@ -50,4 +50,19 @@ export class DishController {
             next(err);
         }
     }
+
+    delete = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+
+            if (typeof id !== "string")
+                throw new BadRequestError("Invalid restaurant ID");
+            
+            this.dishService.delete(id);
+
+            return res.status(204).send();
+        } catch(err) {
+            next(err);
+        }
+    }
 }

@@ -38,4 +38,11 @@ export class DishService {
 
         return this.dishRepository.create(data);
     }
+
+    delete(id: string): void {
+        const deleted = this.dishRepository.delete(id);
+
+        if (!deleted)
+            throw new NotFoundError("Dish not found");
+    }
 }

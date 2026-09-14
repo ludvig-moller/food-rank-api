@@ -2,7 +2,6 @@ import { type Database } from "better-sqlite3";
 
 import { Dish } from "../models/Dish";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
-import { NotImplementedError } from "../errors/NotImplementedError";
 import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
 
 export class DishRepository {
@@ -64,6 +63,10 @@ export class DishRepository {
     }
 
     delete(id: string) {
-        throw new NotImplementedError("This has not been implemented")
+        const result = this.db
+            .prepare("DELETE FROM dishes WHERE id = ?")
+            .run(id);
+
+        return result.changes > 0;
     }
 }
