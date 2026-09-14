@@ -5,6 +5,7 @@ import { DishRepository } from "../../src/repositories/DishRepository";
 import { DishQueryDto } from "../../src/schemas/dishes/dishQuerySchema";
 import { DishCreateDto } from "../../src/schemas/dishes/dishCreateSchema";
 import { Dish } from "../../src/models/Dish";
+import { DishUpdateDto } from "../../src/schemas/dishes/dishUpdateSchema";
 
 const selectDishes = "SELECT * FROM dishes";
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
@@ -233,6 +234,52 @@ describe("create", () => {
             dish_name: "Margherita",
             description: "Tomato sauce, mozzarella, basil",
             price: "120kr",
+        });
+    });
+});
+
+describe("update", () => {
+    it("updates the dish correctly", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const repository = new DishRepository(testDb);
+
+        const data: DishUpdateDto = {
+            dish_name: "Capricciosa",
+            description: null,
+            price: "130kr",
+        }
+        repository.update("1", data);
+
+        const dishes = testDb.prepare(selectDishes).all();
+
+        expect(dishes).toHaveLength(1);
+        expect(dishes[0]).toMatchObject({
+            dish_name: "Capricciosa",
+            description: null,
+            price: "130kr",
+        });
+    });
+
+    it("updates one field correctly", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const repository = new DishRepository(testDb);
+
+        const data: DishUpdateDto = {
+            price: "130kr",
+        }
+        repository.update("1", data);
+
+        const dishes = testDb.prepare(selectDishes).all();
+
+        expect(dishes).toHaveLength(1);
+        expect(dishes[0]).toMatchObject({
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "130kr",
         });
     });
 });

@@ -172,6 +172,80 @@ describe("POST /api/dishes", () => {
     });
 });
 
+describe("PATCH /api/restaurants/:id", () => {
+    it("returns 200", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .patch("/api/dishes/1")
+            .send({
+                price: "130kr",
+            });
+        
+        expect(res.status).toBe(200);
+    });
+
+    it("returns updated dish", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .patch("/api/dishes/1")
+            .send({
+                price: "130kr",
+            });
+        
+        expect(res.body).toMatchObject({
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "130kr",
+        });
+    });
+
+    it("updates the dish in the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        await request(app)
+            .patch("/api/dishes/1")
+            .send({
+                price: "130kr",
+            });
+        
+        const restaurants = testDb.prepare(selectDishes).all();
+        
+        expect(restaurants).toHaveLength(1);
+        expect(restaurants[0]).toMatchObject({
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "130kr",
+        });
+    });
+
+    it("returns 400 when no fields are provided", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .patch("/api/dishes/1");
+
+        expect(res.status).toBe(400);
+    })
+
+    it("returns 404 when restaurant does not exist", async () => {
+        const res = await request(app)
+            .patch("/api/dishes/1")
+            .send({
+                price: "130kr",
+            });
+
+        expect(res.status).toBe(404);
+    })
+});
+
 describe("DELETE /api/dishes/:id", () => {
     it("returns 204", async () => {
         testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");

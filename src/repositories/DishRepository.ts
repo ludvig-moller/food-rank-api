@@ -3,6 +3,8 @@ import { type Database } from "better-sqlite3";
 import { Dish } from "../models/Dish";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
 import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
+import { DishUpdateDto } from "../schemas/dishes/dishUpdateSchema";
+import { NotImplementedError } from "../errors/NotImplementedError";
 
 export class DishRepository {
     private readonly db: Database;
@@ -60,6 +62,10 @@ export class DishRepository {
                 data.description, 
                 data.price,
             ) as Dish;
+    }
+
+    update(id: string, data: DishUpdateDto): Dish | undefined {
+        throw new NotImplementedError("This has not been implemented");
     }
 
     delete(id: string) {
