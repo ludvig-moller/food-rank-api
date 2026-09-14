@@ -4,6 +4,7 @@ import { DishService } from "../services/DishService";
 import { parseDto } from "../utils/parseDto";
 import { BadRequestError } from "../errors/BadRequestError";
 import { dishCreateSchema } from "../schemas/dishes/dishCreateSchema";
+import { dishUpdateSchema } from "../schemas/dishes/dishUpdateSchema";
 
 export class DishController {
     private readonly dishService: DishService;
@@ -46,6 +47,23 @@ export class DishController {
             const dish = this.dishService.create(data);
 
             return res.status(201).json(dish);
+        } catch(err) {
+            next(err);
+        }
+    }
+
+    update = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+
+            if (typeof id !== "string")
+                throw new BadRequestError("Invalid restaurant ID");
+
+            const data = parseDto(dishUpdateSchema, req.body);
+
+            const restaurant = this.dishService.update(id, data);
+
+            return res.status(200).json(restaurant);
         } catch(err) {
             next(err);
         }

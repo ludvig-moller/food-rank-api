@@ -4,7 +4,6 @@ import { Dish } from "../models/Dish";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
 import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
 import { DishUpdateDto } from "../schemas/dishes/dishUpdateSchema";
-import { NotImplementedError } from "../errors/NotImplementedError";
 
 export class DishRepository {
     private readonly db: Database;
@@ -65,7 +64,24 @@ export class DishRepository {
     }
 
     update(id: string, data: DishUpdateDto): Dish | undefined {
-        throw new NotImplementedError("This has not been implemented");
+        const updateFields: string[] = [];
+        const updateValues: (string | null)[] = [];
+
+        Object.entries(data).forEach((entry) => {
+            updateFields.push(entry[0]);
+            updateValues.push(entry[1]);
+        });
+
+        const sql = `
+            UPDATE dishes 
+            SET ${updateFields.map((field) => `${field} = ?`).join(", ")}
+            WHERE id = ?
+            RETURNING *
+        `;
+
+        return this.db
+            .prepare(sql)
+            .get(...updateValues, id) as Dish | undefined;
     }
 
     delete(id: string) {

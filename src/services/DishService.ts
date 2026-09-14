@@ -4,6 +4,7 @@ import { DishRepository } from "../repositories/DishRepository";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
 import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
+import { DishUpdateDto } from "../schemas/dishes/dishUpdateSchema";
 
 export class DishService {
     private readonly dishRepository: DishRepository;
@@ -37,6 +38,15 @@ export class DishService {
             throw new NotFoundError("Restaurant not found");
 
         return this.dishRepository.create(data);
+    }
+
+    update(id: string, data: DishUpdateDto): Dish {
+        const dish = this.dishRepository.update(id, data);
+
+        if (!dish)
+            throw new NotFoundError("Dish not found");
+
+        return dish;
     }
 
     delete(id: string): void {
