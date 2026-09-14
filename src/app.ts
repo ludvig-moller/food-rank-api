@@ -5,6 +5,10 @@ import { RestaurantRepository } from "./repositories/RestaurantRepository";
 import { RestaurantService } from "./services/RestaurantService";
 import { RestaurantController } from "./controllers/RestaurantController";
 import { errorHandler } from "./middleware/errorHandler";
+import { DishRepository } from "./repositories/DishRepository";
+import { DishService } from "./services/DishService";
+import { DishController } from "./controllers/DishController";
+import { createDishRoutes } from "./routes/dishRoutes";
 
 function createApp(db: Database.Database) {
     const app: Express = express();
@@ -15,6 +19,11 @@ function createApp(db: Database.Database) {
     const restaurantService = new RestaurantService(restaurantRepository);
     const restaurantController = new RestaurantController(restaurantService);
     app.use("/api/restaurants", createRestaurantRoutes(restaurantController));
+
+    const dishRepository = new DishRepository(db);
+    const dishService = new DishService(dishRepository);
+    const dishController = new DishController(dishService);
+    app.use("/api/dishes", createDishRoutes(dishController));
 
     app.use(errorHandler);
 

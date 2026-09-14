@@ -6,7 +6,7 @@ import { DishQueryDto } from "../../src/schemas/dishes/dishQuerySchema";
 
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
 
-const insertRestaurant = "INSERT INTO restaurants (id, dish_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
+const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
 
 let testDb: Database;
 

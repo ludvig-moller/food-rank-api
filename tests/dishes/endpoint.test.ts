@@ -48,7 +48,7 @@ describe("GET /api/dishes", () => {
         testDb.prepare(insertDish).run("2", "1", "Capricciosa", "Prosciutto cotto, champignons, black olives", "130kr");
 
         const response = await request(app)
-            .get("/api/dishes?page=1&limit=1&sort=restaurant_name&order=asc&country=Sweden");
+            .get("/api/dishes?page=1&limit=1&sort=dish_name&order=asc&restaurant_id=1");
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveLength(1);
