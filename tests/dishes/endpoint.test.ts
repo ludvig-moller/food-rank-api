@@ -171,3 +171,34 @@ describe("POST /api/dishes", () => {
         expect(res.status).toBe(404);
     });
 });
+
+describe("DELETE /api/dishes/:id", () => {
+    it("returns 204", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .delete("/api/restaurants/1");
+        
+        expect(res.status).toBe(204);
+    });
+
+    it("deletes the dish from the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        await request(app)
+            .delete("/api/dishes/1");
+        
+        const dishes = testDb.prepare(selectDishes).all();
+
+        expect(dishes).toHaveLength(0);
+    });
+
+    it("returns 404 when dish does not exist", async () => {
+        const res = await request(app)
+            .delete("/api/dishes/1");
+
+        expect(res.status).toBe(404);
+    });
+});

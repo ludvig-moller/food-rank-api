@@ -236,3 +236,27 @@ describe("create", () => {
         });
     });
 });
+
+describe("delete", () => {
+    it("deletes the dish and returns true", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const repository = new DishRepository(testDb);
+
+        const result = repository.delete("1");
+
+        const dishes = testDb.prepare(selectDishes).all();
+
+        expect(dishes).toHaveLength(0);
+        expect(result).toBe(true);
+    });
+
+    it("returns false when the id dose not exist", () => {
+        const repository = new DishRepository(testDb);
+
+        const result = repository.delete("1");
+
+        expect(result).toBe(false);
+    });
+});

@@ -62,4 +62,8 @@ export class DishRepository {
                 data.price,
             ) as Dish;
     }
+
+    delete(id: string) {
+        throw new NotImplementedError("This has not been implemented")
+    }
 }
