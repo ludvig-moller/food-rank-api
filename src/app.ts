@@ -21,7 +21,7 @@ function createApp(db: Database.Database) {
     app.use("/api/restaurants", createRestaurantRoutes(restaurantController));
 
     const dishRepository = new DishRepository(db);
-    const dishService = new DishService(dishRepository);
+    const dishService = new DishService(dishRepository, restaurantRepository);
     const dishController = new DishController(dishService);
     app.use("/api/dishes", createDishRoutes(dishController));
 

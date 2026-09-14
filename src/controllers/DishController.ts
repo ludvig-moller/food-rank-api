@@ -3,6 +3,7 @@ import { dishQuerySchema } from "../schemas/dishes/dishQuerySchema";
 import { DishService } from "../services/DishService";
 import { parseDto } from "../utils/parseDto";
 import { BadRequestError } from "../errors/BadRequestError";
+import { dishCreateSchema } from "../schemas/dishes/dishCreateSchema";
 
 export class DishController {
     private readonly dishService: DishService;
@@ -33,6 +34,18 @@ export class DishController {
             const restaurant = this.dishService.getById(id);
 
             return res.status(200).json(restaurant);
+        } catch(err) {
+            next(err);
+        }
+    }
+
+    create = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = parseDto(dishCreateSchema, req.body);
+
+            const dish = this.dishService.create(data);
+
+            return res.status(201).json(dish);
         } catch(err) {
             next(err);
         }

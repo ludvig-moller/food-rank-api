@@ -6,6 +6,7 @@ export const createDishRoutes = (dishController: DishController) => {
 
     router.get("/", dishController.get);
     router.get("/:id", dishController.getById);
+    router.post("/", dishController.create);
 
     return router;
 }

@@ -47,6 +47,19 @@ export class DishRepository {
     }
 
     create(data: DishCreateDto): Dish {
-        throw new NotImplementedError("This has not been implemented");
+        return this.db
+            .prepare(`
+                INSERT INTO 
+                dishes (id, restaurant_id, dish_name, description, price)
+                VALUES (?, ?, ?, ?, ?)
+                RETURNING *
+            `)
+            .get(
+                crypto.randomUUID(), 
+                data.restaurant_id, 
+                data.dish_name, 
+                data.description, 
+                data.price,
+            ) as Dish;
     }
 }

@@ -1,14 +1,20 @@
 import { NotFoundError } from "../errors/NotFoundError";
-import { NotImplementedError } from "../errors/NotImplementedError";
 import { Dish } from "../models/Dish";
 import { DishRepository } from "../repositories/DishRepository";
+import { RestaurantRepository } from "../repositories/RestaurantRepository";
+import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
 
 export class DishService {
     private readonly dishRepository: DishRepository;
+    private readonly restaurantRepository: RestaurantRepository;
 
-    constructor(dishRepository: DishRepository) {
+    constructor(
+        dishRepository: DishRepository, 
+        restaurantRepository: RestaurantRepository,
+    ) {
         this.dishRepository = dishRepository;
+        this.restaurantRepository = restaurantRepository;
     }
 
     get(query: DishQueryDto): Dish[] {
@@ -24,7 +30,12 @@ export class DishService {
         return dish;
     }
 
-    create(data: string): Dish {
-        throw new NotImplementedError("This has not been implemented");
+    create(data: DishCreateDto): Dish {
+        const restaurant = this.restaurantRepository.getById(data.restaurant_id);
+
+        if (!restaurant)
+            throw new NotFoundError("Restaurant not found");
+
+        return this.dishRepository.create(data);
     }
 }
