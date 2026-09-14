@@ -3,7 +3,10 @@ import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { DishRepository } from "../../src/repositories/DishRepository";
 import { DishQueryDto } from "../../src/schemas/dishes/dishQuerySchema";
+import { DishCreateDto } from "../../src/schemas/dishes/dishCreateSchema";
+import { Dish } from "../../src/models/Dish";
 
+const selectDishes = "SELECT * FROM dishes";
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
 
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
@@ -19,7 +22,7 @@ afterEach(() => {
 });
 
 describe("get", () => {
-    it("returns restaurants with default query", () => {
+    it("returns dishes with default query", () => {
         testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
         testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
         testDb.prepare(insertDish).run("2", "1", "Capricciosa", "Prosciutto cotto, champignons, black olives", "130kr");
@@ -182,7 +185,7 @@ describe("get", () => {
 });
 
 describe("getById", () => {
-    it("returns the resturant when it exsits", () => {
+    it("returns the dish when it exsits", () => {
         testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
         testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
 
@@ -205,5 +208,31 @@ describe("getById", () => {
         const dish = repository.getById("1");
 
         expect(dish).toBeUndefined();
+    });
+});
+
+describe("create", () => {
+    it("inserts a dish with correct fields", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const repository = new DishRepository(testDb);
+
+        const data: DishCreateDto = {
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        };
+        repository.create(data);
+
+        const dishes = testDb.prepare(selectDishes).all() as Dish[];
+
+        expect(dishes).toHaveLength(1);
+        expect(dishes[0]).toMatchObject({
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        });
     });
 });

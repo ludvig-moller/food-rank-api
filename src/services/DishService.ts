@@ -1,4 +1,5 @@
 import { NotFoundError } from "../errors/NotFoundError";
+import { NotImplementedError } from "../errors/NotImplementedError";
 import { Dish } from "../models/Dish";
 import { DishRepository } from "../repositories/DishRepository";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
@@ -21,5 +22,9 @@ export class DishService {
             throw new NotFoundError("Dish not found");
 
         return dish;
+    }
+
+    create(data: string): Dish {
+        throw new NotImplementedError("This has not been implemented");
     }
 }

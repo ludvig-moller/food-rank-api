@@ -3,6 +3,7 @@ import { type Database } from "better-sqlite3";
 import { Dish } from "../models/Dish";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
 import { NotImplementedError } from "../errors/NotImplementedError";
+import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
 
 export class DishRepository {
     private readonly db: Database;
@@ -43,5 +44,9 @@ export class DishRepository {
         return this.db
             .prepare("SELECT * FROM dishes WHERE id = ?")
             .get(id) as Dish | undefined;
+    }
+
+    create(data: DishCreateDto): Dish {
+        throw new NotImplementedError("This has not been implemented");
     }
 }

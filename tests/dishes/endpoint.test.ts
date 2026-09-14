@@ -5,6 +5,7 @@ import { type Express } from "express";
 import createApp from "../../src/app";
 import createDb from "../../src/config/db";
 
+const selectDishes = "SELECT * FROM dishes";
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
 
 const insertRestaurant = "INSERT INTO restaurants (id, restaurant_name, description, country, city) VALUES (?, ?, ?, ?, ?)";
@@ -80,9 +81,92 @@ describe("GET /api/dishes/:id", () => {
         });
     });
 
-    it("returns 404 when restaurant does not exist", async () => {
+    it("returns 404 when dish does not exist", async () => {
         const res = await request(app)
             .get("/api/dishes/1");
+        
+        expect(res.status).toBe(404);
+    });
+});
+
+describe("POST /api/dishes", () => {
+    it("returns 201", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .post("/api/dishes")
+            .send({
+                restaurant_id: "1",
+                dish_name: "Margherita",
+                description: "Tomato sauce, mozzarella, basil",
+                price: "120kr",
+            });
+        
+        expect(res.status).toBe(201);
+    });
+
+    it("returns created dish", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        const res = await request(app)
+            .post("/api/dishes")
+            .send({
+                restaurant_id: "1",
+                dish_name: "Margherita",
+                description: "Tomato sauce, mozzarella, basil",
+                price: "120kr",
+            });
+        
+        expect(res.body).toMatchObject({
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        });
+    });
+
+    it("creates dish in the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+
+        await request(app)
+            .post("/api/dishes")
+            .send({
+                restaurant_id: "1",
+                dish_name: "Margherita",
+                description: "Tomato sauce, mozzarella, basil",
+                price: "120kr",
+            });
+        
+        const dishes = testDb.prepare(selectDishes).all();
+
+        expect(dishes).toHaveLength(1);
+        expect(dishes[0]).toMatchObject({
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        });
+    });
+
+    it("returns 400 when request has missing fields", async () => {
+        const res = await request(app)
+            .post("/api/dishes")
+            .send({
+                price: "120kr",
+            });
+        
+        expect(res.status).toBe(400);
+    });
+
+    it("returns 404 when restaurant does not exist", async () => {
+        const res = await request(app)
+            .post("/api/dishes")
+            .send({
+                restaurant_id: "1",
+                dish_name: "Margherita",
+                description: "Tomato sauce, mozzarella, basil",
+                price: "120kr",
+            });
         
         expect(res.status).toBe(404);
     });
