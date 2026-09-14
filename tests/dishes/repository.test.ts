@@ -180,3 +180,30 @@ describe("get", () => {
         expect(dishes[0].dish_name).toBe("Margherita");
     });
 });
+
+describe("getById", () => {
+    it("returns the resturant when it exsits", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const repository = new DishRepository(testDb);
+
+        const dish = repository.getById("1");
+
+        expect(dish).toMatchObject({
+            id: "1",
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        });
+    });
+
+    it("returns undefined when it dosent exists", () => {
+        const repository = new DishRepository(testDb);
+
+        const dish = repository.getById("1");
+
+        expect(dish).toBeUndefined();
+    });
+});

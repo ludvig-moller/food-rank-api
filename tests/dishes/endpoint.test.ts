@@ -61,3 +61,29 @@ describe("GET /api/dishes", () => {
         expect(response.status).toBe(400);
     });
 });
+
+describe("GET /api/dishes/:id", () => {
+    it("returns 200 with the dish", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .get("/api/dishes/1");
+
+        expect(res.status).toBe(200);
+        expect(res.body).toMatchObject({
+            id: "1",
+            restaurant_id: "1",
+            dish_name: "Margherita",
+            description: "Tomato sauce, mozzarella, basil",
+            price: "120kr",
+        });
+    });
+
+    it("returns 404 when restaurant does not exist", async () => {
+        const res = await request(app)
+            .get("/api/dishes/1");
+        
+        expect(res.status).toBe(404);
+    });
+});
