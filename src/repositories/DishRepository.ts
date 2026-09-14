@@ -40,6 +40,8 @@ export class DishRepository {
     }
 
     getById(id: string): Dish | undefined {
-        throw new NotImplementedError("This has not been implemented");
+        return this.db
+            .prepare("SELECT * FROM dishes WHERE id = ?")
+            .get(id) as Dish | undefined;
     }
 }

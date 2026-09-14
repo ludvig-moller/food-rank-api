@@ -1,3 +1,4 @@
+import { NotFoundError } from "../errors/NotFoundError";
 import { Dish } from "../models/Dish";
 import { DishRepository } from "../repositories/DishRepository";
 import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
@@ -11,5 +12,14 @@ export class DishService {
 
     get(query: DishQueryDto): Dish[] {
         return this.dishRepository.get(query);
+    }
+
+    getById(id: string): Dish {
+        const dish = this.dishRepository.getById(id);
+
+        if (!dish)
+            throw new NotFoundError("Dish not found");
+
+        return dish;
     }
 }
