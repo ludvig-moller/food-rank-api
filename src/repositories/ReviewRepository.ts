@@ -38,4 +38,8 @@ export class ReviewRepository {
             .prepare(sql)
             .all(...params) as Review[];
     }
+
+    getById(id: string): Review | undefined {
+        throw new NotImplementedError("This has not been implemented");
+    }
 }

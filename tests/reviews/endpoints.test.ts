@@ -64,3 +64,29 @@ describe("GET /api/reviews", () => {
         expect(response.status).toBe(400);
     });
 });
+
+describe("GET /api/reviews/:id", () => {
+    it("returns 200 with the review", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+        testDb.prepare(insertReview).run("1", "1", 5, "Very good");
+
+        const res = await request(app)
+            .get("/api/reviews/1");
+
+        expect(res.status).toBe(200);
+        expect(res.body).toMatchObject({
+            id: "1",
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        });
+    });
+
+    it("returns 404 when review does not exist", async () => {
+        const res = await request(app)
+            .get("/api/reviews/1");
+        
+        expect(res.status).toBe(404);
+    });
+});

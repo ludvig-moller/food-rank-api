@@ -190,3 +190,30 @@ describe("get", () => {
         expect(reviews[0].description).toBe("Very good");
     });
 });
+
+describe("getById", () => {
+    it("returns the review when it exsits", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+        testDb.prepare(insertReview).run("1", "1", 5, "Very good");
+
+        const repository = new ReviewRepository(testDb);
+
+        const review = repository.getById("1");
+
+        expect(review).toMatchObject({
+            id: "1",
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        });
+    });
+
+    it("returns undefined when it dosent exists", () => {
+        const repository = new ReviewRepository(testDb);
+
+        const review = repository.getById("1");
+
+        expect(review).toBeUndefined();
+    });
+});
