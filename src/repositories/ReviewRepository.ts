@@ -40,6 +40,8 @@ export class ReviewRepository {
     }
 
     getById(id: string): Review | undefined {
-        throw new NotImplementedError("This has not been implemented");
+        return this.db
+            .prepare("SELECT * FROM reviews WHERE id = ?")
+            .get(id) as Review | undefined;
     }
 }
