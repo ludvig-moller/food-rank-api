@@ -132,7 +132,7 @@ describe("POST /api/reviews", () => {
         testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
 
         await request(app)
-            .post("/api/dishes")
+            .post("/api/reviews")
             .send({
                 dish_id: "1",
                 rating: 5,

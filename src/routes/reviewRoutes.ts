@@ -6,6 +6,7 @@ export const createReviewRoutes = (reviewController: ReviewController) => {
 
     router.get("/", reviewController.get);
     router.get("/:id", reviewController.getById);
+    router.post("/", reviewController.create);
 
     return router;
 }

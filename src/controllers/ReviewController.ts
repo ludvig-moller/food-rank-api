@@ -3,6 +3,7 @@ import { ReviewService } from "../services/ReviewService";
 import { parseDto } from "../utils/parseDto";
 import { reviewQuerySchema } from "../schemas/reviews/reviewQuerySchema";
 import { BadRequestError } from "../errors/BadRequestError";
+import { reviewCreateSchema } from "../schemas/reviews/reviewCreateSchema";
 
 export class ReviewController {
     private readonly reviewService: ReviewService;
@@ -15,9 +16,9 @@ export class ReviewController {
         try {
             const query = parseDto(reviewQuerySchema, req.query);
 
-            const restaurants = this.reviewService.get(query);
+            const reviews = this.reviewService.get(query);
 
-            return res.status(200).json(restaurants);
+            return res.status(200).json(reviews);
         } catch(err) {
             next(err);
         }
@@ -30,9 +31,21 @@ export class ReviewController {
             if (typeof id !== "string")
                 throw new BadRequestError("Invalid restaurant ID");
 
-            const restaurant = this.reviewService.getById(id);
+            const review = this.reviewService.getById(id);
 
-            return res.status(200).json(restaurant);
+            return res.status(200).json(review);
+        } catch(err) {
+            next(err);
+        }
+    }
+
+    create = (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const data = parseDto(reviewCreateSchema, req.body);
+
+            const review = this.reviewService.create(data);
+
+            return res.status(201).json(review);
         } catch(err) {
             next(err);
         }

@@ -30,7 +30,7 @@ function createApp(db: Database.Database) {
     app.use("/api/dishes", createDishRoutes(dishController));
 
     const reviewRepository = new ReviewRepository(db);
-    const reviewService = new ReviewService(reviewRepository);
+    const reviewService = new ReviewService(reviewRepository, dishRepository);
     const reviewController = new ReviewController(reviewService);
     app.use("/api/reviews", createReviewRoutes(reviewController));
 

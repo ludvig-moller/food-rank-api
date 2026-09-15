@@ -47,6 +47,18 @@ export class ReviewRepository {
     }
 
     create(data: ReviewCreateDto): Review {
-        throw new NotImplementedError("This has not been implemented");
+        return this.db
+            .prepare(`
+                INSERT INTO 
+                reviews (id, dish_id, rating, description)
+                VALUES (?, ?, ?, ?)
+                RETURNING *
+            `)
+            .get(
+                crypto.randomUUID(), 
+                data.dish_id, 
+                data.rating, 
+                data.description,
+            ) as Review;
     }
 }

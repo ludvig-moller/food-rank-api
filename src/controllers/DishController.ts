@@ -17,9 +17,9 @@ export class DishController {
         try {
             const query = parseDto(dishQuerySchema, req.query);
 
-            const restaurants = this.dishService.get(query);
+            const dishes = this.dishService.get(query);
 
-            return res.status(200).json(restaurants);
+            return res.status(200).json(dishes);
         } catch(err) {
             next(err);
         }
@@ -32,9 +32,9 @@ export class DishController {
             if (typeof id !== "string")
                 throw new BadRequestError("Invalid dish ID");
 
-            const restaurant = this.dishService.getById(id);
+            const dish = this.dishService.getById(id);
 
-            return res.status(200).json(restaurant);
+            return res.status(200).json(dish);
         } catch(err) {
             next(err);
         }
@@ -61,9 +61,9 @@ export class DishController {
 
             const data = parseDto(dishUpdateSchema, req.body);
 
-            const restaurant = this.dishService.update(id, data);
+            const dish = this.dishService.update(id, data);
 
-            return res.status(200).json(restaurant);
+            return res.status(200).json(dish);
         } catch(err) {
             next(err);
         }
