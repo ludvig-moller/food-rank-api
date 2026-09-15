@@ -12,6 +12,30 @@ export class ReviewRepository {
     }
 
     get(query: ReviewQueryDto): Review[] {
-        throw new NotImplementedError("This has not been implemented");
+        const params: (string | number)[] = [];
+        
+        let whereClause = "";
+        if (query.dish_id) {
+            whereClause = "WHERE dish_id = ?";
+            params.push(query.dish_id);
+        }
+
+        const offset = (query.page - 1) * query.limit;
+        params.push(query.limit, offset);
+
+        const order = query.order == "asc" ? "ASC" : "DESC";
+
+        const sql = `
+            SELECT * 
+            FROM reviews
+            ${whereClause}
+            ORDER BY ${query.sort} ${order}
+            LIMIT ?
+            OFFSET ?
+        `;
+        
+        return this.db
+            .prepare(sql)
+            .all(...params) as Review[];
     }
 }

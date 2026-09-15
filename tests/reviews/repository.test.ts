@@ -187,6 +187,6 @@ describe("get", () => {
         const reviews = repository.get(query);
 
         expect(reviews).toHaveLength(1);
-        expect(reviews[0].description).toBe("Good");
+        expect(reviews[0].description).toBe("Very good");
     });
 });

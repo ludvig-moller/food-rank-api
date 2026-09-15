@@ -9,6 +9,10 @@ import { DishRepository } from "./repositories/DishRepository";
 import { DishService } from "./services/DishService";
 import { DishController } from "./controllers/DishController";
 import { createDishRoutes } from "./routes/dishRoutes";
+import { ReviewRepository } from "./repositories/ReviewRepository";
+import { ReviewService } from "./services/ReviewService";
+import { ReviewController } from "./controllers/ReviewController";
+import { createReviewRoutes } from "./routes/reviewRoutes";
 
 function createApp(db: Database.Database) {
     const app: Express = express();
@@ -24,6 +28,11 @@ function createApp(db: Database.Database) {
     const dishService = new DishService(dishRepository, restaurantRepository);
     const dishController = new DishController(dishService);
     app.use("/api/dishes", createDishRoutes(dishController));
+
+    const reviewRepository = new ReviewRepository(db);
+    const reviewService = new ReviewService(reviewRepository);
+    const reviewController = new ReviewController(reviewService);
+    app.use("/api/reviews", createReviewRoutes(reviewController));
 
     app.use(errorHandler);
 
