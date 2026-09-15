@@ -3,6 +3,7 @@ import { type Database } from "better-sqlite3";
 import { NotImplementedError } from "../errors/NotImplementedError";
 import { Review } from "../models/Review";
 import { ReviewQueryDto } from "../schemas/reviews/reviewQuerySchema";
+import { ReviewCreateDto } from "../schemas/reviews/reviewCreateSchema";
 
 export class ReviewRepository {
     private readonly db: Database;
@@ -43,5 +44,9 @@ export class ReviewRepository {
         return this.db
             .prepare("SELECT * FROM reviews WHERE id = ?")
             .get(id) as Review | undefined;
+    }
+
+    create(data: ReviewCreateDto): Review {
+        throw new NotImplementedError("This has not been implemented");
     }
 }

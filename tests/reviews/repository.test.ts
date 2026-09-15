@@ -3,7 +3,10 @@ import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { ReviewRepository } from "../../src/repositories/ReviewRepository";
 import { ReviewQueryDto } from "../../src/schemas/reviews/reviewQuerySchema";
+import { ReviewCreateDto } from "../../src/schemas/reviews/reviewCreateSchema";
+import { Review } from "../../src/models/Review";
 
+const selectReviews = "SELECT * FROM reviews";
 const insertReview = "INSERT INTO reviews (id, dish_id, rating, description) VALUES (?, ?, ?, ?)";
 
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
@@ -215,5 +218,30 @@ describe("getById", () => {
         const review = repository.getById("1");
 
         expect(review).toBeUndefined();
+    });
+});
+
+describe("create", () => {
+    it("inserts a review with correct fields", () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const repository = new ReviewRepository(testDb);
+
+        const data: ReviewCreateDto = {
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        };
+        repository.create(data);
+
+        const reviews = testDb.prepare(selectReviews).all() as Review[];
+
+        expect(reviews).toHaveLength(1);
+        expect(reviews[0]).toMatchObject({
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        });
     });
 });

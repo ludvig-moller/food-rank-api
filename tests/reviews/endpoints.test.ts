@@ -5,6 +5,7 @@ import { type Express } from "express";
 import createApp from "../../src/app";
 import createDb from "../../src/config/db";
 
+const selectReviews = "SELECT * FROM reviews";
 const insertReview = "INSERT INTO reviews (id, dish_id, rating, description) VALUES (?, ?, ?, ?)";
 
 const insertDish = "INSERT INTO dishes (id, restaurant_id, dish_name, description, price) VALUES (?, ?, ?, ?, ?)";
@@ -86,6 +87,111 @@ describe("GET /api/reviews/:id", () => {
     it("returns 404 when review does not exist", async () => {
         const res = await request(app)
             .get("/api/reviews/1");
+        
+        expect(res.status).toBe(404);
+    });
+});
+
+describe("POST /api/reviews", () => {
+    it("returns 201", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .post("/api/reviews")
+            .send({
+                dish_id: "1",
+                rating: 5,
+                description: "Very good",
+            });
+        
+        expect(res.status).toBe(201);
+    });
+
+    it("returns created review", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        const res = await request(app)
+            .post("/api/reviews")
+            .send({
+                dish_id: "1",
+                rating: 5,
+                description: "Very good",
+            });
+        
+        expect(res.body).toMatchObject({
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        });
+    });
+
+    it("creates review in the database", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        await request(app)
+            .post("/api/dishes")
+            .send({
+                dish_id: "1",
+                rating: 5,
+                description: "Very good",
+            });
+        
+        const reviews = testDb.prepare(selectReviews).all();
+
+        expect(reviews).toHaveLength(1);
+        expect(reviews[0]).toMatchObject({
+            dish_id: "1",
+            rating: 5,
+            description: "Very good",
+        });
+    });
+
+    it("returns 400 when request has missing fields", async () => {
+        const res = await request(app)
+            .post("/api/reviews")
+            .send({
+                rating: 5,
+            });
+        
+        expect(res.status).toBe(400);
+    });
+
+    it("returns 400 when rating is less than 1 or higher than 5", async () => {
+        testDb.prepare(insertRestaurant).run("1", "Pizza place", "The best pizza.", "Sweden", "Stockholm");
+        testDb.prepare(insertDish).run("1", "1", "Margherita", "Tomato sauce, mozzarella, basil", "120kr");
+
+        let res = await request(app)
+            .post("/api/reviews")
+            .send({
+                dish_id: "1",
+                rating: -1,
+                description: "Very bad",
+            });
+        
+        expect(res.status).toBe(400);
+
+        res = await request(app)
+            .post("/api/reviews")
+            .send({
+                dish_id: "1",
+                rating: 6,
+                description: "Very good",
+            });
+        
+        expect(res.status).toBe(400);
+    });
+
+    it("returns 404 when dish does not exist", async () => {
+        const res = await request(app)
+            .post("/api/reviews")
+            .send({
+                dish_id: "1",
+                rating: 5,
+                description: "Very good",
+            });
         
         expect(res.status).toBe(404);
     });
