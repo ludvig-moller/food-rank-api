@@ -1,9 +1,9 @@
 import { NotFoundError } from "../errors/NotFoundError";
-import { Review } from "../models/Review";
+import { Review } from "../schemas/reviews/reviewSchema";
 import { DishRepository } from "../repositories/DishRepository";
 import { ReviewRepository } from "../repositories/ReviewRepository";
-import { ReviewCreateDto } from "../schemas/reviews/reviewCreateSchema";
-import { ReviewQueryDto } from "../schemas/reviews/reviewQuerySchema";
+import { ReviewCreateDto } from "../schemas/reviews/DTOs/reviewCreateSchema";
+import { ReviewQueryDto } from "../schemas/reviews/DTOs/reviewQuerySchema";
 
 export class ReviewService {
     private readonly reviewRepository: ReviewRepository;

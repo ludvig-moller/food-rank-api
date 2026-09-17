@@ -1,5 +1,7 @@
 import express, { type Express } from "express";
 import Database from "better-sqlite3";
+import { generateOpenAPIDocument } from "./docs/openapi";
+import { apiReference } from "@scalar/express-api-reference";
 import { createRestaurantRoutes } from "./routes/RestaurantRoutes";
 import { RestaurantRepository } from "./repositories/RestaurantRepository";
 import { RestaurantService } from "./services/RestaurantService";
@@ -35,6 +37,16 @@ function createApp(db: Database.Database) {
     app.use("/api/reviews", createReviewRoutes(reviewController));
 
     app.use(errorHandler);
+
+    const apiDocJsonContent = generateOpenAPIDocument();
+    app.use(
+        "/docs",
+        apiReference({
+            content: apiDocJsonContent,
+            title: "Food Rank API",
+            pageTitle: "Food Rank API",
+        }),
+    );
 
     return app;
 }

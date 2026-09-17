@@ -1,10 +1,10 @@
 import { NotFoundError } from "../errors/NotFoundError";
-import { Dish } from "../models/Dish";
+import { Dish } from "../schemas/dishes/dishSchema";
 import { DishRepository } from "../repositories/DishRepository";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
-import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
-import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
-import { DishUpdateDto } from "../schemas/dishes/dishUpdateSchema";
+import { DishQueryDto } from "../schemas/dishes/DTOs/dishQuerySchema";
+import { DishCreateDto } from "../schemas/dishes/DTOs/dishCreateSchema";
+import { DishUpdateDto } from "../schemas/dishes/DTOs/dishUpdateSchema";
 
 export class DishService {
     private readonly dishRepository: DishRepository;

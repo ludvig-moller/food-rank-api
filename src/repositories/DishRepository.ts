@@ -1,9 +1,9 @@
 import { type Database } from "better-sqlite3";
 
-import { Dish } from "../models/Dish";
-import { DishQueryDto } from "../schemas/dishes/dishQuerySchema";
-import { DishCreateDto } from "../schemas/dishes/dishCreateSchema";
-import { DishUpdateDto } from "../schemas/dishes/dishUpdateSchema";
+import { Dish } from "../schemas/dishes/dishSchema";
+import { DishQueryDto } from "../schemas/dishes/DTOs/dishQuerySchema";
+import { DishCreateDto } from "../schemas/dishes/DTOs/dishCreateSchema";
+import { DishUpdateDto } from "../schemas/dishes/DTOs/dishUpdateSchema";
 
 export class DishRepository {
     private readonly db: Database;

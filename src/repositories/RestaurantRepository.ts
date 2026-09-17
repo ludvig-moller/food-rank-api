@@ -1,9 +1,9 @@
 import { type Database } from "better-sqlite3";
 
-import { Restaurant } from "../models/Restaurant";
-import { RestaurantQueryDto } from "../schemas/restaurants/restaurantQuerySchema";
-import { RestaurantCreateDto } from "../schemas/restaurants/restaurantCreateSchema";
-import { RestaurantUpdateDto } from "../schemas/restaurants/restaurantUpdateSchema";
+import { Restaurant } from "../schemas/restaurants/restaurantSchema";
+import { RestaurantQueryDto } from "../schemas/restaurants/DTOs/restaurantQuerySchema";
+import { RestaurantCreateDto } from "../schemas/restaurants/DTOs/restaurantCreateSchema";
+import { RestaurantUpdateDto } from "../schemas/restaurants/DTOs/restaurantUpdateSchema";
 
 export class RestaurantRepository {
     private readonly db: Database;

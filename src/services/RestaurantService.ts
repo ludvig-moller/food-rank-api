@@ -1,9 +1,9 @@
 import { NotFoundError } from "../errors/NotFoundError";
-import { Restaurant } from "../models/Restaurant";
+import { Restaurant } from "../schemas/restaurants/restaurantSchema";
 import { RestaurantRepository } from "../repositories/RestaurantRepository";
-import { RestaurantCreateDto } from "../schemas/restaurants/restaurantCreateSchema";
-import { RestaurantQueryDto } from "../schemas/restaurants/restaurantQuerySchema";
-import { RestaurantUpdateDto } from "../schemas/restaurants/restaurantUpdateSchema";
+import { RestaurantCreateDto } from "../schemas/restaurants/DTOs/restaurantCreateSchema";
+import { RestaurantQueryDto } from "../schemas/restaurants/DTOs/restaurantQuerySchema";
+import { RestaurantUpdateDto } from "../schemas/restaurants/DTOs/restaurantUpdateSchema";
 
 export class RestaurantService {
     private readonly restaurantRepository: RestaurantRepository;

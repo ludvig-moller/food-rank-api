@@ -1,9 +1,8 @@
 import { type Database } from "better-sqlite3";
 
-import { NotImplementedError } from "../errors/NotImplementedError";
-import { Review } from "../models/Review";
-import { ReviewQueryDto } from "../schemas/reviews/reviewQuerySchema";
-import { ReviewCreateDto } from "../schemas/reviews/reviewCreateSchema";
+import { Review } from "../schemas/reviews/reviewSchema";
+import { ReviewQueryDto } from "../schemas/reviews/DTOs/reviewQuerySchema";
+import { ReviewCreateDto } from "../schemas/reviews/DTOs/reviewCreateSchema";
 
 export class ReviewRepository {
     private readonly db: Database;

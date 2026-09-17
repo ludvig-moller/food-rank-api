@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ReviewService } from "../services/ReviewService";
 import { parseDto } from "../utils/parseDto";
-import { reviewQuerySchema } from "../schemas/reviews/reviewQuerySchema";
+import { reviewQuerySchema } from "../schemas/reviews/DTOs/reviewQuerySchema";
 import { BadRequestError } from "../errors/BadRequestError";
-import { reviewCreateSchema } from "../schemas/reviews/reviewCreateSchema";
+import { reviewCreateSchema } from "../schemas/reviews/DTOs/reviewCreateSchema";
 
 export class ReviewController {
     private readonly reviewService: ReviewService;

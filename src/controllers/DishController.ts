@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { dishQuerySchema } from "../schemas/dishes/dishQuerySchema";
+import { dishQuerySchema } from "../schemas/dishes/DTOs/dishQuerySchema";
 import { DishService } from "../services/DishService";
 import { parseDto } from "../utils/parseDto";
 import { BadRequestError } from "../errors/BadRequestError";
-import { dishCreateSchema } from "../schemas/dishes/dishCreateSchema";
-import { dishUpdateSchema } from "../schemas/dishes/dishUpdateSchema";
+import { dishCreateSchema } from "../schemas/dishes/DTOs/dishCreateSchema";
+import { dishUpdateSchema } from "../schemas/dishes/DTOs/dishUpdateSchema";
 
 export class DishController {
     private readonly dishService: DishService;

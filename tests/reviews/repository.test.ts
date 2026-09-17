@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { type Database } from "better-sqlite3";
 import createDb from "../../src/config/db";
 import { ReviewRepository } from "../../src/repositories/ReviewRepository";
-import { ReviewQueryDto } from "../../src/schemas/reviews/reviewQuerySchema";
-import { ReviewCreateDto } from "../../src/schemas/reviews/reviewCreateSchema";
-import { Review } from "../../src/models/Review";
+import { ReviewQueryDto } from "../../src/schemas/reviews/DTOs/reviewQuerySchema";
+import { ReviewCreateDto } from "../../src/schemas/reviews/DTOs/reviewCreateSchema";
+import { Review } from "../../src/schemas/reviews/reviewSchema";
 
 const selectReviews = "SELECT * FROM reviews";
 const insertReview = "INSERT INTO reviews (id, dish_id, rating, description) VALUES (?, ?, ?, ?)";
