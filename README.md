@@ -12,3 +12,8 @@ Kör sedan följande kommandon i terminalen för att starta projektet:
 npm install
 npm run dev
 ```
+
+Detta startar API:et på localhost med porten från `.env` filen
+
+## Tester
+För att köra tester kör kommandot `npm test`
